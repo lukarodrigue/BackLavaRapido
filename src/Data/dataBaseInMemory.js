@@ -1,40 +1,18 @@
-let data = [];
-let appointmenId = 1;
-
-// Função para obter todos os agendamentos
-function getAll() {
-    return data;
-}
-
-// Função para obter um agendamento pelo ID
-function getById(id) {
-    return data.find(item => item.id === id);
-}
-
-// Função para criar um novo agendamento
-function create(item) {
-    const newAppointmen = { id: appointmenId++, ...item };
-    
-    data.push(newAppointmen);
-    
-    return newAppointmen;
-
-}
-
-// Função para remover um agendamento pelo ID
-function remove(id) {
-    const index = data.findIndex(appt => appt.id === id);
-
-    if (index !== -1) {
-        return data.splice(index, 1)[0];
-    }
-    return null;
-}
-
+let appointments = [];
+let idCounter = 1;
 
 module.exports = {
-    getAll,
-    getById,
-    create,
-    remove
+    getAll: () => appointments,
+    getById: (id) => appointments.find(a => a.id === id),
+    create: ({ client, car, service, data }) => {
+        const novo = { id: idCounter++, client, car, service, data };
+        appointments.push(novo);
+        return novo;
+    },
+    remove: (id) => {
+        const idx = appointments.findIndex(a => a.id === id);
+        if (idx === -1) return false;
+        appointments.splice(idx, 1);
+        return true;
+    }
 };
