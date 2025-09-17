@@ -1,0 +1,19 @@
+{
+  "name": "BackLavaRapido",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "scripts": {
+    "dev": "nodemon ./src/server.js"
+  },
+  "keywords": [],
+  "author": "luka rodrigues goncalves",
+  "license": "ISC",
+  "description": "Projeto Back-end Lava Rapido",
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0"
+  }
+}
