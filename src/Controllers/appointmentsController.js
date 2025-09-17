@@ -1,12 +1,11 @@
 const appointments = require('../Data/dataBaseInMemory');
 
-
 exports.getAllAppointments = (request, response) => {
-    response.json(appointments.getAll);
+    response.json(appointments.getAll());
 };
 
 exports.getAllAppointmentsById = (request, response) => {
-    const  id  = request.params;
+    const { id } = request.params;
     const appt = appointments.getById(Number(id));
 
     if (!appt) {
@@ -31,7 +30,7 @@ exports.createAppointment = (request, response) => {
 }
 
 exports.deleteAppointment = (request, response) => {
-    const id  = request.params;
+    const { id } = request.params;
     const removed = appointments.remove(Number(id)); 
 
     if (!removed) {
