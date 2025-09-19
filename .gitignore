@@ -1,3 +1,6 @@
 node_modules
 dotenv
 .env
+*sqlite3
+*sqlite
+database.db

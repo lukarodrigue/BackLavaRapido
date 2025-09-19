@@ -1,4 +1,4 @@
-const appointments = require('../Data/dataBaseInMemory');
+const appointments = require('../dataInMemory/dataBaseInMemory');
 
 exports.getAllAppointments = (request, response) => {
     response.json(appointments.getAll());
