@@ -2,9 +2,9 @@ const { Router } = require('express');
 const routes = Router();
 
 //importa rotas de agendamentos
-const appointmentsRouter = require('./temp.routes.js');
+const apptRoutes = require("./temp.routes");
 
 //caminho para rotas
-routes.use('/appointments', appointmentsRouter);
+routes.use('/appointments', apptRoutes);
 
 module.exports = routes;

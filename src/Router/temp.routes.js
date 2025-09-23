@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const AppointmentsController = require('../controllers/appointmentsController');
 
-const userRoutes = Router();
-userRoutes.post('/', AppointmentsController.create);
-
-module.exports = userRoutes;
+const apptRoutes = Router();
+apptRoutes.post('/', AppointmentsController.create);
+apptRoutes.get('/:id', AppointmentsController.show);
+module.exports = apptRoutes;
