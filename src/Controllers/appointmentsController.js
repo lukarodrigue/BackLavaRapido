@@ -1,43 +1,24 @@
-const appointments = require('../dataInMemory/dataBaseInMemory');
+const sqliteConnection = require("../database/sqlite3");
 
-exports.getAllAppointments = (request, response) => {
-    response.json(appointments.getAll());
-};
+class AppointmentsController {
+     static async create(request, response) {
+        const { client, car, service, data, } = request.body;
 
-exports.getAllAppointmentsById = (request, response) => {
-    const { id } = request.params;
-    const appt = appointments.getById(Number(id));
-
-    if (!appt) {
-        return response.status(404).json({ message: 'Agendamento não encontrado' });
+        if (!client || !car || !service || !data) {
+            return response.status(400).json({
+                error: "Todos os campos são obrigatórios."
+            });
+        }
+        try {
+            const database = await sqliteConnection();
+            await database.run(
+                "INSERT INTO appointments (client, car, service, data) VALUES (?, ?, ?, ?)",
+                [client, car, service, data]
+            );
+            return response.status(201).json({ message: "Agendamento criado com sucesso!" });
+        } catch (error) {
+            return response.status(500).json({ error: "Erro ao criar agendamento." });
+        }
     }
-
-    response.json(appt);
 }
-
-exports.createAppointment = (request, response) => {
-    const { client, car, service, data } = request.body;
-
-    if(!client || !car || !service || !data) {
-        return response.status(400).json({
-            error: 'Campos obrigatórios não foram preenchidos'
-        });
-    };
-
-    const novo = appointments.create({ client, car, service, data });
-
-    response.status(201).json(novo);
-}
-
-exports.deleteAppointment = (request, response) => {
-    const { id } = request.params;
-    const removed = appointments.remove(Number(id)); 
-
-    if (!removed) {
-        return response.status(404).json({ message: 'Agendamento não encontrado' });
-    }
-
-    response.json({
-        message: 'Agendamento removido com sucesso',
-    });
-};
+module.exports = AppointmentsController;
