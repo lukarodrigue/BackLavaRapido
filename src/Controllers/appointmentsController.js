@@ -63,6 +63,28 @@ class AppointmentsController {
             return response.status(500).json({ error: "Erro ao buscar agendamento." });
         }
     }
+
+    static async delete(request, response) {
+        const { id } = request.params;
+        const database = await sqliteConnection();
+
+        const appt = await database.get(
+            "SELECT * FROM appointments WHERE id = ?",
+            [id]
+        );
+
+        if(!appt) {
+            return response.status(404).json({ error: "Agendamento não encontrado." });
+        }
+    
+        await database.run(
+            "DELETE FROM appointments WHERE id = ?",
+            [id]
+        );
+
+        return response.json({ message: "Agendamento deletado com sucesso." });
+    }
 }
 
 module.exports = AppointmentsController;
+
