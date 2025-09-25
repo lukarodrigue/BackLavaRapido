@@ -1,9 +1,10 @@
-const sqliteConnection = require("../database/sqlite3");
+const knex = require("../database/knex");
 
 
 class AppointmentsController {
-    static async create(request, response) {
+    async create(request, response) {
         const { client, car, service, data } = request.body;
+
 
         if (!client || !car || !service || !data) {
             return response.status(400).json({
@@ -12,79 +13,90 @@ class AppointmentsController {
         }
 
         try {
-            const database = await sqliteConnection();
 
-            //verifica se já existe um agendamento para o mesmo cliente
-            const existingClient = await database.get(
-                "SELECT * FROM appointments WHERE client = ?",
-                [client]
-            );
+            const existingAppointment = await knex('appointments').where({ client }).first();
 
-            if (existingClient) {
+            if (existingAppointment) {
                 return response.status(400).json({
-                    error: "Cliente já está agendado, rever o agendamento cadastrado."
+                    error: "Cliente já possui um agendamento cadastrado."
                 });
             }
 
-            // Se não existir, cria o agendamento
-            await database.run(
-                "INSERT INTO appointments (client, car, service, data) VALUES (?, ?, ?, ?)",
-                [client, car, service, data]
-            );
+            const [newAppointment] = await knex('appointments')
+                .insert({
+                    client,
+                    car,
+                    service,
+                    data,
+                })
 
-            return response
-                .status(201)
-                .json({ message: "Agendamento criado com sucesso!" });
+            return response.status(201).json({ message: 'Agendamento criado com sucesso!' });
+
         } catch (error) {
             console.error(error);
-            return response.status(500).json({ error: "Erro ao criar agendamento." });
+            return response.status(500).json({ error: "Erro interno ao criar agendamento." });
         }
-    }
+    };
 
-    static async show(request, response) {
+    async show(request, response) {
         const { id } = request.params;
-        const database = await sqliteConnection();
 
         try {
-            const appt = await database.get(
-                "SELECT * FROM appointments WHERE id = ?",
-                [id]
-            );
+            const appointmentShow = await knex("appointments")
+                .where({ id })
+                .first();
 
-            if(!appt) {
+            if (!appointmentShow) {
                 return response.status(404).json({ error: "Agendamento não encontrado." });
             }
 
-            return response.json(appt);
-
+            return response.status(200).json({ appointmentShow })
 
         } catch (error) {
             console.error(error);
             return response.status(500).json({ error: "Erro ao buscar agendamento." });
-        }
-    }
+        };
+    };
 
-    static async delete(request, response) {
+    async update(request, response) {
         const { id } = request.params;
-        const database = await sqliteConnection();
+        const { client, car, service, data } = request.body;
 
-        const appt = await database.get(
-            "SELECT * FROM appointments WHERE id = ?",
-            [id]
-        );
+        const appointment = await knex("appointments").where({ id }).first();
 
-        if(!appt) {
-            return response.status(404).json({ error: "Agendamento não encontrado." });
+        const appointmentUpdate = {
+            client: client ?? appointment.client,
+            car: car ?? appointment.car,
+            service: service ?? appointment.service,
+            data: data ?? appointment.data
+        };
+
+        await knex("appointments").where({ id }).update(appointmentUpdate);
+
+        return response.status(200).json({ message: "Agendamento atualizado com sucesso." });
+
+    };
+
+    async delete(request, response) {
+        const { id } = request.params;
+
+        try {
+            const appointmentDelete = await knex("appointments").where({ id }).first();
+
+            if (!appointmentDelete) {
+                return response.status(404).json({ error: "Agendamento não encontrado." });
+            }
+
+            await knex("appointments").where({ id }).delete();
+            return response.status(200).json({ message: "Agendamento deletado com sucesso." });
+
+        } catch (error) {
+            console.error(error);
+            return response.status(500).json({ error: "Erro ao deletar agendamento." });
         }
-    
-        await database.run(
-            "DELETE FROM appointments WHERE id = ?",
-            [id]
-        );
+    };
 
-        return response.json({ message: "Agendamento deletado com sucesso." });
-    }
-}
+};
+
 
 module.exports = AppointmentsController;
-
