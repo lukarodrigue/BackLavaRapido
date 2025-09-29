@@ -1,6 +1,6 @@
 # BackLavaRapido
 
-Sistema backend desenvolvido em Node.js para gerenciamento de agendamentos em uma lava-rápido. O projeto implementa autenticação JWT, controle de usuários e gerenciamento de serviços utilizando SQLite como banco de dados.
+Sistema backend desenvolvido em Node.js para gerenciamento de agendamentos em um lava-rápido. O projeto implementa autenticação JWT, controle de usuários e gerenciamento de serviços utilizando SQLite como banco de dados.
 
 ## Tecnologias Utilizadas
 
