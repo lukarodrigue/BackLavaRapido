@@ -15,7 +15,7 @@
   },
   "scripts": {
     "dev": "nodemon ./src/server.js",
-    "knexfile": ""
+    "migrate": "knex migrate:latest --knexfile ./src/database/knexfile.js"
   },
   "keywords": [],
   "author": "luka rodrigues goncalves",

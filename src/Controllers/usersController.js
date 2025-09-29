@@ -43,12 +43,10 @@ class UsersController {
         try {
             const user = await knex('users').where({ id }).first();
 
-            // 1. Verifica se o usuário existe
             if (!user) {
                 return response.status(404).json({ error: "Usuário não encontrado." });
             }
 
-            // 2. Verifica se o novo e-mail já está em uso por outro usuário
             if (email) {
                 const userWithUpdateEmail = await knex('users').where({ email }).first();
                 if (userWithUpdateEmail && userWithUpdateEmail.id !== user.id) {
@@ -67,14 +65,13 @@ class UsersController {
 
                 const checkOldPassword = await compare(old_password, user.password);
 
-                console.log(checkOldPassword);
 
                 if (checkOldPassword === false) {
                     return response.status(400).json({ error: "A senha antiga não confere." });
                 }
 
                 user.password = await hash(password, 8);
-                console.log(user.password);
+
             }
 
             await knex('users')
