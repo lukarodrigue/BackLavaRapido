@@ -64,6 +64,10 @@ class AppointmentsController {
 
         const appointment = await knex("appointments").where({ id }).first();
 
+        if (!appointment) {
+            return response.status(404).json({ error: "Agendamento não encontrado." });
+        }
+
         const appointmentUpdate = {
             client: client ?? appointment.client,
             car: car ?? appointment.car,
