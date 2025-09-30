@@ -43,8 +43,9 @@ npm install
 Crie um arquivo `.env` na raiz do projeto baseado no `.env.example`:
 
 ```
-JWT_SECRET=suachavesecreta
-JWT_EXPIRES_IN=1d
+JWT_SECRET=Sua Chave Secreta
+JWT_EXPIRES_IN=Tempo de Expiração da Sessão
+PORT=Porta local
 ```
 
 ## Banco de Dados
